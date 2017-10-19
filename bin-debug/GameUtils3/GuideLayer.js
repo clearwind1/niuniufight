@@ -89,3 +89,4 @@ var GuideLayer = (function (_super) {
     return GuideLayer;
 }(GameUtil.BassPanel));
 __reflect(GuideLayer.prototype, "GuideLayer");
+//# sourceMappingURL=GuideLayer.js.map

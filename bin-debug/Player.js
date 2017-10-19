@@ -18,17 +18,99 @@ var Player = (function (_super) {
     __extends(Player, _super);
     function Player() {
         var _this = _super.call(this) || this;
+        //设为庄家
+        _this.bankcont = null;
+        //叫牌按钮
+        _this.callbtncont = null;
         _this.initdata();
         _this.showhead();
+        _this.showgold();
+        _this.addcallbtn();
         return _this;
     }
     Player.prototype.initdata = function () {
         this.handcardarr = [];
+        this.isBanker = false;
+        this.gold = 10000;
+        this.betgold = 0;
     };
     Player.prototype.showhead = function () {
         this.headimg = new MyBitmap(RES.getRes('head1_png'), 0, 0);
         this.addChild(this.headimg);
     };
+    Player.prototype.setBanker = function (b) {
+        this.isBanker = b;
+        if (b) {
+            this.showbanker();
+        }
+        else {
+            if (this.bankcont != null) {
+                this.removeChild(this.bankcont);
+                this.bankcont = null;
+            }
+        }
+    };
+    Player.prototype.getBanker = function () {
+        return this.isBanker;
+    };
+    Player.prototype.showbanker = function () {
+        this.bankcont = new egret.Sprite();
+        this.bankcont.graphics.beginFill(0x38aecc, 1);
+        this.bankcont.graphics.drawCircle(0, 0, 30);
+        this.bankcont.graphics.endFill();
+        this.addChild(this.bankcont);
+        var t = new GameUtil.MyTextField(0, 0, 25, 0.5, 0.5);
+        t.setText('庄');
+        this.bankcont.addChild(t);
+        this.bankcont.x = 54;
+        this.bankcont.y = -45;
+    };
+    Player.prototype.showgold = function () {
+        this.totalgoldt = new GameUtil.MyTextField(-140, -20, 20, 0, 0);
+        this.totalgoldt.setText('总:' + this.gold);
+        this.addChild(this.totalgoldt);
+        this.betgoldt = new GameUtil.MyTextField(-140, 20, 20, 0, 0);
+        this.betgoldt.setText('押:' + this.betgold);
+        this.addChild(this.betgoldt);
+    };
+    //更新金币 
+    Player.prototype.updatagold = function () {
+        this.totalgoldt.setText('总:' + this.gold);
+        this.betgoldt.setText('押:' + this.betgold);
+    };
+    Player.prototype.addcallbtn = function () {
+        this.callbtncont = new egret.Sprite();
+        this.addChild(this.callbtncont);
+        this.callbtncont.visible = false;
+        var fun = this.wantcard;
+        var btn = new GameUtil.Menu(this, '', '', fun);
+        btn.setScaleMode();
+        btn.addButtonShap(GameUtil.createRect(0, 0, 200, 40, 1, 0x3399fe, 20, 30), -100, -20);
+        btn.addButtonText('要   牌', 30);
+        this.callbtncont.addChild(btn);
+        btn.x = 200;
+        btn.y = -140;
+        var fun = this.passcard;
+        var btn = new GameUtil.Menu(this, '', '', fun);
+        btn.setScaleMode();
+        btn.addButtonShap(GameUtil.createRect(0, 0, 200, 40, 1, 0x3399fe, 20, 30), -100, -20);
+        btn.addButtonText('不   要', 30);
+        this.callbtncont.addChild(btn);
+        btn.x = 500;
+        btn.y = -140;
+    };
+    Player.prototype.wantcard = function () {
+        var gamescene = this.parent;
+        gamescene.sendcard(false);
+    };
+    Player.prototype.passcard = function () {
+        var gamescene = this.parent;
+        gamescene.nextplayercall();
+    };
+    Player.prototype.showcallbtn = function (bshow) {
+        this.callbtncont.visible = bshow;
+    };
     return Player;
 }(egret.DisplayObjectContainer));
 __reflect(Player.prototype, "Player");
+//# sourceMappingURL=Player.js.map

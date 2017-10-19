@@ -69,3 +69,4 @@ var GameSetting = (function (_super) {
     return GameSetting;
 }(Othercontainer));
 __reflect(GameSetting.prototype, "GameSetting");
+//# sourceMappingURL=GameSetting.js.map

@@ -50,3 +50,4 @@ var GetImageByUrl = (function (_super) {
     return GetImageByUrl;
 }(egret.DisplayObjectContainer));
 __reflect(GetImageByUrl.prototype, "GetImageByUrl");
+//# sourceMappingURL=GetImageByUrl.js.map

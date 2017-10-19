@@ -31,3 +31,4 @@ var qr;
     qr.QRBitBuffer = QRBitBuffer;
     __reflect(QRBitBuffer.prototype, "qr.QRBitBuffer");
 })(qr || (qr = {}));
+//# sourceMappingURL=QRBitBuffer.js.map

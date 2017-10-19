@@ -35,3 +35,4 @@ var Othercontainer = (function (_super) {
     return Othercontainer;
 }(GameUtil.BassPanel));
 __reflect(Othercontainer.prototype, "Othercontainer");
+//# sourceMappingURL=Othercontainer.js.map

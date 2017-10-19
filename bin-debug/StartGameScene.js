@@ -77,3 +77,4 @@ var StartGameScene = (function (_super) {
     return StartGameScene;
 }(GameUtil.BassPanel));
 __reflect(StartGameScene.prototype, "StartGameScene");
+//# sourceMappingURL=StartGameScene.js.map

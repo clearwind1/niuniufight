@@ -46,3 +46,4 @@ var MySound = (function () {
     return MySound;
 }());
 __reflect(MySound.prototype, "MySound");
+//# sourceMappingURL=MySound.js.map

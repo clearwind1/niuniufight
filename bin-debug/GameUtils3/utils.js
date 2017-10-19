@@ -48,6 +48,22 @@ var GameUtil;
     }
     GameUtil.createCircle = createCircle;
     /**
+     * 创建一条直线
+     * @param thickness 线条大小
+     * @param color 颜色
+     * @param sx,sy 起始位置
+     * @param ex,ey 结束位置
+     */
+    function createLine(thickness, color, sx, sy, ex, ey) {
+        var shp = new egret.Shape();
+        shp.graphics.lineStyle(thickness, color);
+        shp.graphics.moveTo(sx, sy);
+        shp.graphics.lineTo(ex, ey);
+        shp.graphics.endFill();
+        return shp;
+    }
+    GameUtil.createLine = createLine;
+    /**
      * 将Object转化成 =& post字符串;
      * @param postData
      * @returns {string}
@@ -331,3 +347,4 @@ var GameUtil;
     }
     GameUtil.setInterval = setInterval;
 })(GameUtil || (GameUtil = {}));
+//# sourceMappingURL=utils.js.map

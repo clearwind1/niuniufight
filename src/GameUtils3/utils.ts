@@ -40,6 +40,21 @@ module GameUtil {
         return shp;
     }
     /**
+     * 创建一条直线
+     * @param thickness 线条大小
+     * @param color 颜色
+     * @param sx,sy 起始位置
+     * @param ex,ey 结束位置
+     */
+    export function createLine(thickness: number, color: number, sx: number, sy: number, ex: number, ey: number): egret.Shape {
+        var shp: egret.Shape = new egret.Shape();
+        shp.graphics.lineStyle(thickness, color);
+        shp.graphics.moveTo(sx, sy);
+        shp.graphics.lineTo(ex, ey);
+        shp.graphics.endFill();
+        return shp;
+    }
+    /**
      * 将Object转化成 =& post字符串;
      * @param postData
      * @returns {string}
@@ -228,7 +243,7 @@ module GameUtil {
     /**
      * 使对象发光
      */
-    export function light(sp: any,color) {
+    export function light(sp: any, color) {
         //var color: number = 0x33CCFF;        /// 光晕的颜色，十六进制，不包含透明度
         var alpha: number = 0.8;             /// 光晕的颜色透明度，是对 color 参数的透明度设定。有效值为 0.0 到 1.0。例如，0.8 设置透明度值为 80%。
         var blurX: number = 35;              /// 水平模糊量。有效值为 0 到 255.0（浮点）
@@ -278,7 +293,7 @@ module GameUtil {
     /**
      * 定时器
      */
-    export function setInterval(fun:Function,objtarget,delay) {
+    export function setInterval(fun: Function, objtarget, delay) {
         return egret.setInterval(() => {
             if (GameData._i().GamePause) {
                 return;

@@ -43,3 +43,4 @@ var qr;
     qr.QRRSBlock = QRRSBlock;
     __reflect(QRRSBlock.prototype, "qr.QRRSBlock");
 })(qr || (qr = {}));
+//# sourceMappingURL=QRRSBlock.js.map

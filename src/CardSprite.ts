@@ -17,7 +17,7 @@ class CardSprite extends egret.DisplayObjectContainer {
 	private cardback: MyBitmap;
 	private showback() {
 		var resname = this.gettypename(this.cardtype) + '-' + this.cardnumber + '_jpg';
-		console.log('resname===', resname);
+		//console.log('resname===', resname);
 		this.cardfront = new MyBitmap(RES.getRes(resname), 0, 0);
 		this.cardfront.scaleX = 0;
 		this.addChild(this.cardfront);

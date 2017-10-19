@@ -26,10 +26,16 @@ var GameUtil;
             _this.height = size;
             _this.type = egret.TextFieldType.INPUT;
             _this.baseText = "";
+            _this.sourceText = "";
+            _this.ispassword = false;
             _this.addEventListener(egret.FocusEvent.FOCUS_IN, _this.onFocusIn, _this);
             _this.addEventListener(egret.FocusEvent.FOCUS_OUT, _this.onFocusOut, _this);
+            _this.addEventListener(egret.TextEvent.CHANGE, _this.change, _this);
             return _this;
         }
+        InputTextFiled.prototype.setPassword = function () {
+            //this.ispassword = true;
+        };
         InputTextFiled.prototype.setBaseText = function (basetext, alpha) {
             this.baseText = basetext;
             this.baseTextAlpha = alpha;
@@ -44,6 +50,9 @@ var GameUtil;
                 this.setSize(this.basetextsize);
                 this.height = size;
             }
+        };
+        InputTextFiled.prototype.getText = function () {
+            return this.sourceText;
         };
         InputTextFiled.prototype.onFocusIn = function (event) {
             //console.log("focusein");
@@ -64,8 +73,21 @@ var GameUtil;
             }
             //console.log("outheight=====",this.anchorOffsetY);
         };
+        InputTextFiled.prototype.change = function (event) {
+            var text = event.currentTarget.text;
+            text = text[text.length - 1];
+            if (text.length < this.sourceText.length) {
+            }
+            this.sourceText += text;
+            console.log(this.sourceText);
+            this.text = "";
+            for (var i = 0; i < this.sourceText.length; i++) {
+                this.text += "*";
+            }
+        };
         return InputTextFiled;
     }(GameUtil.MyTextField));
     GameUtil.InputTextFiled = InputTextFiled;
     __reflect(InputTextFiled.prototype, "GameUtil.InputTextFiled");
 })(GameUtil || (GameUtil = {}));
+//# sourceMappingURL=InputTextFiled.js.map

@@ -35,7 +35,7 @@ var CardSprite = (function (_super) {
     }
     CardSprite.prototype.showback = function () {
         var resname = this.gettypename(this.cardtype) + '-' + this.cardnumber + '_jpg';
-        console.log('resname===', resname);
+        //console.log('resname===', resname);
         this.cardfront = new MyBitmap(RES.getRes(resname), 0, 0);
         this.cardfront.scaleX = 0;
         this.addChild(this.cardfront);
@@ -75,3 +75,4 @@ var CardSprite = (function (_super) {
     return CardSprite;
 }(egret.DisplayObjectContainer));
 __reflect(CardSprite.prototype, "CardSprite");
+//# sourceMappingURL=CardSprite.js.map

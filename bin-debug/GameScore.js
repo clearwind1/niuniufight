@@ -55,3 +55,4 @@ var GameScore = (function (_super) {
     return GameScore;
 }(egret.DisplayObjectContainer));
 __reflect(GameScore.prototype, "GameScore");
+//# sourceMappingURL=GameScore.js.map

@@ -22,3 +22,4 @@ var qr;
     qr.QRMaskPattern = QRMaskPattern;
     __reflect(QRMaskPattern.prototype, "qr.QRMaskPattern");
 })(qr || (qr = {}));
+//# sourceMappingURL=QRMaskPattern.js.map

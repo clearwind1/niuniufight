@@ -45,3 +45,4 @@ var MyBitmap = (function (_super) {
     return MyBitmap;
 }(egret.Bitmap));
 __reflect(MyBitmap.prototype, "MyBitmap");
+//# sourceMappingURL=MyBitmap.js.map

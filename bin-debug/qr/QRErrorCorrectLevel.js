@@ -18,3 +18,4 @@ var qr;
     qr.QRErrorCorrectLevel = QRErrorCorrectLevel;
     __reflect(QRErrorCorrectLevel.prototype, "qr.QRErrorCorrectLevel");
 })(qr || (qr = {}));
+//# sourceMappingURL=QRErrorCorrectLevel.js.map

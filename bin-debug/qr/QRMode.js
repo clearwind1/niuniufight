@@ -18,3 +18,4 @@ var qr;
     qr.QRMode = QRMode;
     __reflect(QRMode.prototype, "qr.QRMode");
 })(qr || (qr = {}));
+//# sourceMappingURL=QRMode.js.map

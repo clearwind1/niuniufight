@@ -69,3 +69,4 @@ var GameUtil;
     GameUtil.LoadingLogopre = LoadingLogopre;
     __reflect(LoadingLogopre.prototype, "GameUtil.LoadingLogopre");
 })(GameUtil || (GameUtil = {}));
+//# sourceMappingURL=LoadingLogopre.js.map

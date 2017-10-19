@@ -43,3 +43,4 @@ var Timercontrol = (function () {
     return Timercontrol;
 }());
 __reflect(Timercontrol.prototype, "Timercontrol");
+//# sourceMappingURL=Timercontrol.js.map

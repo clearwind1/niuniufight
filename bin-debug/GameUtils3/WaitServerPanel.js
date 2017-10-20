@@ -19,23 +19,26 @@ var GameUtil;
 (function (GameUtil) {
     var WaitServerPanel = (function (_super) {
         __extends(WaitServerPanel, _super);
-        function WaitServerPanel(alpha) {
-            if (alpha === void 0) { alpha = 0; }
+        function WaitServerPanel() {
             var _this = _super.call(this) || this;
-            _this.init(alpha);
+            _this.init();
             return _this;
         }
-        WaitServerPanel.prototype.init = function (alpha) {
-            this.coverBg = GameUtil.createRect(0, 0, 640, 1136, 0);
+        WaitServerPanel.prototype.init = function () {
+            this.coverBg = GameUtil.createRect(0, 0, GameConfig.getSW(), GameConfig.getSH(), 0.3, 0x000000);
             this.addChild(this.coverBg);
             this.touchEnabled = true;
+            this.wainttext = new GameUtil.MyTextField(GameConfig.getSW() / 2, GameConfig.getSH() / 2, 30, 0.5, 0.5);
+            this.wainttext.setText('请等待其他玩家下注');
+            this.wainttext.textColor = 0x3399fe;
+            this.addChild(this.wainttext);
         };
         WaitServerPanel.prototype.setAlpha = function (aplha) {
             this.coverBg.alpha = aplha;
         };
         WaitServerPanel.getInstace = function () {
             if (this._instance == null) {
-                this._instance = new GameUtil.WaitServerPanel(0);
+                this._instance = new GameUtil.WaitServerPanel();
             }
             return this._instance;
         };

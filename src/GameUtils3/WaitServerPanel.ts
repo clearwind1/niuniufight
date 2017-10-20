@@ -3,39 +3,36 @@
  * Created by pior on 15/11/11.
  */
 
-module GameUtil
-{
-    export class WaitServerPanel extends egret.DisplayObjectContainer
-    {
+module GameUtil {
+    export class WaitServerPanel extends egret.DisplayObjectContainer {
 
         private coverBg: egret.Shape;
-        public constructor(alpha:number = 0)
-        {
+        public constructor() {
             super();
-            this.init(alpha);
+            this.init();
         }
-
-        private init(alpha:number):void
-        {
-            this.coverBg = GameUtil.createRect(0,0,640,1136,0);
+        public wainttext: GameUtil.MyTextField;
+        private init(): void {
+            this.coverBg = GameUtil.createRect(0, 0, GameConfig.getSW(), GameConfig.getSH(), 0.3, 0x000000);
             this.addChild(this.coverBg);
 
             this.touchEnabled = true;
 
+            this.wainttext = new GameUtil.MyTextField(GameConfig.getSW() / 2, GameConfig.getSH() / 2, 30, 0.5, 0.5);
+            this.wainttext.setText('请等待其他玩家下注');
+            this.wainttext.textColor = 0x3399fe;
+            this.addChild(this.wainttext);
         }
 
-        public setAlpha(aplha:number):void
-        {
+        public setAlpha(aplha: number): void {
             this.coverBg.alpha = aplha;
         }
 
 
         private static _instance: WaitServerPanel;
-        public static getInstace(): WaitServerPanel
-        {
-            if(this._instance == null)
-            {
-                this._instance = new GameUtil.WaitServerPanel(0);
+        public static getInstace(): WaitServerPanel {
+            if (this._instance == null) {
+                this._instance = new GameUtil.WaitServerPanel();
             }
 
             return this._instance;

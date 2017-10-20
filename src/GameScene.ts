@@ -27,6 +27,7 @@ class GameScene extends GameUtil.BassPanel {
         this.showbg();
         this.bindkeyboard();
         this.gameinterval();
+        this.startdown();
     }
     /**
      * 初始化数据
@@ -61,7 +62,9 @@ class GameScene extends GameUtil.BassPanel {
 
         // this.addChild(GameScore._i());
     }
-    //显示玩家
+    /**
+     * 显示玩家
+     */
     private player: Player[] = [];
     private showplayer() {
         let dis = 250;
@@ -71,14 +74,18 @@ class GameScene extends GameUtil.BassPanel {
             this.player[i].x = pos[i].x;
             this.player[i].y = pos[i].y;
             this.player[i].rotation = i * -90;
+            if (i != 0) {
+                this.player[i].isAI = true;     //设置为AI
+            }
             this.addChild(this.player[i]);
         }
         this.bankerID = RandomUtils.limitInteger(0, 3);
-        this.bankerID = 2;
         this.player[this.bankerID].setBanker(true);
         this.currPlayerID = (this.bankerID + 1) % 4;
     }
-    //显示中间的牌库
+    /**
+     * 显示中间的牌库
+     */
     private showCardstack() {
         for (let i: number = 0; i < 10; i++) {
             let card = new CardSprite(1, CardType.Black);
@@ -87,15 +94,17 @@ class GameScene extends GameUtil.BassPanel {
             this.addChild(card);
         }
     }
-    //下注界面
+    /**
+     * 下注界面
+     */
     private betframecont: egret.Sprite;
     public addbetframe() {
         this.betframecont = new egret.Sprite();
         this.addChild(this.betframecont);
-        this.betframecont.visible = true;
+        this.betframecont.visible = false;
 
         let betnumber: number = 10;
-        let totalnumber: number = this.player[0].gold;
+        let totalnumber: number = this.player[0].gold - betnumber;
         let curbetnumber: number = 10;
 
         //背景框
@@ -151,6 +160,7 @@ class GameScene extends GameUtil.BassPanel {
             this.player[0].betgold = betnumber;
             this.player[0].updatagold();
             this.betframecont.visible = false;
+            this.showWaiting(400);
         });
         btn.addButtonShap(GameUtil.createRect(0, 0, 200, 40, 1, 0x3399fe, 20, 30), -100, -20);
         btn.addButtonText('确   定', 30);
@@ -170,16 +180,71 @@ class GameScene extends GameUtil.BassPanel {
             text.textColor = 0xabead9;
             this.betframecont.addChild(text);
         }
-
+    }
+    /**
+     * 显示下注框 
+     */
+    public showbetframe() {
         if (this.bankerID == 0) {
-            this.showbetframe(false);
+            this.betframecont.visible = false;
+            this.showWaiting(1000);
+            return;
+        } else {
+            (<GameUtil.MyTextField>this.betframecont.getChildByName('text3')).setText('' + 10);
+            (<GameUtil.MyTextField>this.betframecont.getChildByName('text2')).setText('' + (this.player[0].gold - 10));
+            this.betframecont.visible = true;
         }
 
     }
-    public showbetframe(bshow: boolean) {
-        this.betframecont.visible = bshow;
+    /**
+     * 等待界面
+     */
+    private showWaiting(delay: number) {
+
+        this.addChild(GameUtil.WaitServerPanel.getInstace());
+        GameUtil.WaitServerPanel.getInstace().wainttext.size = 30;
+        GameUtil.WaitServerPanel.getInstace().wainttext.setText('请等待其他玩家下注');
+        egret.setTimeout(() => {
+            this.removeChild(GameUtil.WaitServerPanel.getInstace());
+            //为AI设置下注
+            this.AIbet();
+            this.sendcard(true);
+        }, this, delay);
     }
-    //发牌按钮
+    /**
+     * AI下注
+     */
+    private AIbet() {
+        for (let i: number = 0; i < 4; i++) {
+            if (this.player[i].isAI && !this.player[i].getBanker()) {
+                this.player[i].betgold = RandomUtils.limitInteger(1, 10) * 10;
+                this.player[i].gold -= this.player[i].betgold;
+                this.player[i].updatagold();
+            }
+        }
+    }
+    /**
+     * 开始倒计时
+     * */
+    private downtime: number = 3;
+    private startdown() {
+        var txte = '' + this.downtime;
+        if (this.downtime == 0) {
+            txte = "READY GO";
+        } else if (this.downtime < 0) {
+            this.removeChild(GameUtil.WaitServerPanel.getInstace());
+            this.showbetframe();
+            return;
+        }
+        this.addChild(GameUtil.WaitServerPanel.getInstace());
+        GameUtil.WaitServerPanel.getInstace().wainttext.size = 100;
+        GameUtil.WaitServerPanel.getInstace().wainttext.setText('' + txte);
+        this.downtime--;
+        egret.setTimeout(this.startdown, this, 1000);
+    }
+    /**
+     * 发牌按钮
+     */
     private sendcardbtn: GameUtil.Menu;
     private showsendcardbtn() {
         var fun = this.sendcard;
@@ -192,7 +257,9 @@ class GameScene extends GameUtil.BassPanel {
         this.sendcardbtn.y = this.mStageH / 2 + 150;
         this.sendcardbtn.visible = false;
     }
-    //发牌 bsendall: 是否发全部人
+    /**
+     * 发牌 bsendall: 是否发全部人
+     */
     public sendcard(bsendall: boolean) {
         //console.log('id===', id);
         this.sendcardbtn.visible = false;
@@ -214,6 +281,7 @@ class GameScene extends GameUtil.BassPanel {
         this.addChild(newcard);
         //放入玩家手中
         this.player[id].handcardarr.push(newcard);
+        this.player[id].updatahandcardnumber();
 
         //牌的位置         
         let posx = this.player[id].x;
@@ -235,6 +303,10 @@ class GameScene extends GameUtil.BassPanel {
 
             if (this.player[id].handcardarr.length >= 5) {
                 this.nextplayercall();
+            } else {
+                if (!bsendall) {
+                    this.playercall();
+                }
             }
 
             if (bsendall) {
@@ -243,7 +315,9 @@ class GameScene extends GameUtil.BassPanel {
             }
         }, this);
     }
-    //获取牌库里任意一张牌
+    /**
+     * 获取牌库里任意一张牌
+     */
     private getrandcard(): any {
         let cardselet = this.cardarr[RandomUtils.limitInteger(0, this.cardarr.length - 3)];
         let cardtype = Math.floor((cardselet - 1) / 13);
@@ -256,26 +330,83 @@ class GameScene extends GameUtil.BassPanel {
 
         return card;
     }
-    //第一次玩家叫牌
+    /**
+     * 第一次玩家叫牌
+     */
     private playercall() {
-        this.player[this.currPlayerID].showcallbtn(true);
+        if (this.currPlayerID == 0) {
+            this.player[this.currPlayerID].showcallbtn(true);
+        }
+        else {
+            //AI 叫牌
+            if (this.player[this.currPlayerID].getHandcardnumber() >= 17 || this.player[this.currPlayerID].getHandcardnumber() == 0) {
+                egret.setTimeout(this.nextplayercall, this, 500);
+            } else {
+                egret.setTimeout(() => {
+                    this.sendcard(false);
+                }, this, 500);
+            }
+        }
     }
-    //下一个玩家叫牌
+    /**
+     * 下一个玩家叫牌
+     */
     public nextplayercall() {
         this.player[this.currPlayerID].showcallbtn(false);
 
         if (this.currPlayerID == this.bankerID) {
             //清算
-
+            egret.setTimeout(this.caculateGame, this, 1000);
+            //this.caculateGame();
         } else {
             this.currPlayerID = (this.currPlayerID + 1) % 4;
-            this.player[this.currPlayerID].showcallbtn(true);
+            if (this.currPlayerID == 0) {
+                this.player[this.currPlayerID].showcallbtn(true);
+            }
+            else {
+                //AI 叫牌
+                if (this.player[this.currPlayerID].getHandcardnumber() >= 17 || this.player[this.currPlayerID].getHandcardnumber() == 0) {
+                    egret.setTimeout(this.nextplayercall, this, 500);
+                } else {
+                    egret.setTimeout(() => {
+                        this.sendcard(false);
+                    }, this, 500);
+                }
+            }
         }
     }
 
     //清算
     private caculateGame() {
-
+        //计算庄家手牌点数
+        let bankercardnumber = this.player[this.bankerID].getHandcardnumber();
+        let banker = this.player[this.bankerID];
+        for (let i: number = 0; i < 4; i++) {
+            let player = this.player[i];
+            if (!player.getBanker()) {
+                let playercardnumber = player.getHandcardnumber();
+                if (playercardnumber > bankercardnumber) {          //玩家赢
+                    let betnumber = player.betgold;
+                    banker.gold -= betnumber;
+                    banker.updatagold();
+                    player.gold += (betnumber * 2);
+                    player.betgold = 0;
+                    player.updatagold();
+                } else if (playercardnumber == bankercardnumber) {  //玩家平
+                    player.gold += player.betgold;
+                    player.betgold = 0;
+                    player.updatagold();
+                } else {        //玩家输
+                    let betnumber = player.betgold;
+                    banker.gold += betnumber;
+                    banker.updatagold();
+                    player.betgold = 0;
+                    player.updatagold();
+                }
+            }
+        }
+        // this.restart();
+        this.gameover();
     }
 
     /**
@@ -354,6 +485,19 @@ class GameScene extends GameUtil.BassPanel {
      */
     public gameover() {
         console.log("GameOver");
+        for (let i: number = 0; i < 4; i++) {
+            for (let j: number = 0; j < this.player[i].handcardarr.length; j++) {
+                let card = this.player[i].handcardarr[j];
+                egret.Tween.get(card).to({ x: this.mStageW / 2, y: this.mStageH / 2 }, 300).call(() => {
+                    this.removeChild(card);
+                }, this);
+            }
+
+            this.player[i].handcardarr = [];
+            this.player[i].setBanker(false);
+
+        }
+
         this.clearinter();
         GameData._i().GameOver = true;
         this.addChild(new GameOverPageShow());
@@ -388,6 +532,12 @@ class GameScene extends GameUtil.BassPanel {
      */
     private restart() {
 
+        this.bankerID = RandomUtils.limitInteger(0, 3);
+        this.player[this.bankerID].setBanker(true);
+        this.currPlayerID = (this.bankerID + 1) % 4;
+
+        this.downtime = 3;
+        this.startdown();
     }
     /**
      * 需要绑定的键盘事件

@@ -31,8 +31,10 @@ var Player = (function (_super) {
     Player.prototype.initdata = function () {
         this.handcardarr = [];
         this.isBanker = false;
+        this.isAI = false;
         this.gold = 10000;
         this.betgold = 0;
+        this.handcardnumber = 0;
     };
     Player.prototype.showhead = function () {
         this.headimg = new MyBitmap(RES.getRes('head1_png'), 0, 0);
@@ -109,6 +111,24 @@ var Player = (function (_super) {
     };
     Player.prototype.showcallbtn = function (bshow) {
         this.callbtncont.visible = bshow;
+    };
+    Player.prototype.updatahandcardnumber = function () {
+        this.handcardnumber = 0;
+        for (var i = 0; i < this.handcardarr.length; i++) {
+            var card = this.handcardarr[i];
+            var cardnumber = 0;
+            if (card.cardnumber >= 10) {
+                cardnumber = 10;
+            }
+            else {
+                cardnumber = card.cardnumber;
+            }
+            this.handcardnumber += cardnumber;
+        }
+        this.handcardnumber = (this.handcardnumber > 21) ? 0 : this.handcardnumber;
+    };
+    Player.prototype.getHandcardnumber = function () {
+        return this.handcardnumber;
     };
     return Player;
 }(egret.DisplayObjectContainer));

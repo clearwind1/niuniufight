@@ -5,7 +5,7 @@
 enum CardType { Black, Red, Club, Diamond, King, End };
 
 class CardSprite extends egret.DisplayObjectContainer {
-	private cardnumber: number;
+	public cardnumber: number;
 	private cardtype: number;
 	public constructor(cardnumber, cardtype) {
 		super();

@@ -1,0 +1,324 @@
+{
+	"groups": [
+		{
+			"keys": "loadingbar_png",
+			"name": "preloading"
+		},
+		{
+			"keys": "startgamebg_jpg,startgamebtn_png,head0_png,head1_png,head2_png,B-1_jpg,B-10_jpg,B-11_jpg,B-12_jpg,B-13_jpg,B-2_jpg,B-3_jpg,B-4_jpg,B-5_jpg,B-6_jpg,B-7_jpg,B-8_jpg,B-9_jpg,C-1_jpg,C-10_jpg,C-11_jpg,C-12_jpg,C-13_jpg,C-2_jpg,C-3_jpg,C-4_jpg,C-5_jpg,C-6_jpg,C-7_jpg,C-8_jpg,C-9_jpg,D-1_jpg,D-10_jpg,D-11_jpg,D-12_jpg,D-13_jpg,D-2_jpg,D-3_jpg,D-4_jpg,D-5_jpg,D-6_jpg,D-7_jpg,D-8_jpg,D-9_jpg,K-1_jpg,K-2_jpg,cardback_png,R-1_jpg,R-2_jpg,R-3_jpg,R-4_jpg,R-5_jpg,R-6_jpg,R-7_jpg,R-8_jpg,R-9_jpg,R-10_jpg,R-11_jpg,R-12_jpg,R-13_jpg",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/loadingbar.png",
+			"type": "image",
+			"name": "loadingbar_png"
+		},
+		{
+			"url": "config/description.json",
+			"type": "json",
+			"name": "description"
+		},
+		{
+			"url": "assets/startgamebg.jpg",
+			"type": "image",
+			"name": "startgamebg_jpg"
+		},
+		{
+			"url": "assets/startgamebtn.png",
+			"type": "image",
+			"name": "startgamebtn_png"
+		},
+		{
+			"url": "assets/head/head0.png",
+			"type": "image",
+			"name": "head0_png"
+		},
+		{
+			"url": "assets/head/head1.png",
+			"type": "image",
+			"name": "head1_png"
+		},
+		{
+			"url": "assets/head/head2.png",
+			"type": "image",
+			"name": "head2_png"
+		},
+		{
+			"url": "assets/card/B-1.jpg",
+			"type": "image",
+			"name": "B-1_jpg"
+		},
+		{
+			"url": "assets/card/B-10.jpg",
+			"type": "image",
+			"name": "B-10_jpg"
+		},
+		{
+			"url": "assets/card/B-11.jpg",
+			"type": "image",
+			"name": "B-11_jpg"
+		},
+		{
+			"url": "assets/card/B-12.jpg",
+			"type": "image",
+			"name": "B-12_jpg"
+		},
+		{
+			"url": "assets/card/B-13.jpg",
+			"type": "image",
+			"name": "B-13_jpg"
+		},
+		{
+			"url": "assets/card/B-2.jpg",
+			"type": "image",
+			"name": "B-2_jpg"
+		},
+		{
+			"url": "assets/card/B-3.jpg",
+			"type": "image",
+			"name": "B-3_jpg"
+		},
+		{
+			"url": "assets/card/B-4.jpg",
+			"type": "image",
+			"name": "B-4_jpg"
+		},
+		{
+			"url": "assets/card/B-5.jpg",
+			"type": "image",
+			"name": "B-5_jpg"
+		},
+		{
+			"url": "assets/card/B-6.jpg",
+			"type": "image",
+			"name": "B-6_jpg"
+		},
+		{
+			"url": "assets/card/B-7.jpg",
+			"type": "image",
+			"name": "B-7_jpg"
+		},
+		{
+			"url": "assets/card/B-8.jpg",
+			"type": "image",
+			"name": "B-8_jpg"
+		},
+		{
+			"url": "assets/card/B-9.jpg",
+			"type": "image",
+			"name": "B-9_jpg"
+		},
+		{
+			"url": "assets/card/C-1.jpg",
+			"type": "image",
+			"name": "C-1_jpg"
+		},
+		{
+			"url": "assets/card/C-10.jpg",
+			"type": "image",
+			"name": "C-10_jpg"
+		},
+		{
+			"url": "assets/card/C-11.jpg",
+			"type": "image",
+			"name": "C-11_jpg"
+		},
+		{
+			"url": "assets/card/C-12.jpg",
+			"type": "image",
+			"name": "C-12_jpg"
+		},
+		{
+			"url": "assets/card/C-13.jpg",
+			"type": "image",
+			"name": "C-13_jpg"
+		},
+		{
+			"url": "assets/card/C-2.jpg",
+			"type": "image",
+			"name": "C-2_jpg"
+		},
+		{
+			"url": "assets/card/C-3.jpg",
+			"type": "image",
+			"name": "C-3_jpg"
+		},
+		{
+			"url": "assets/card/C-4.jpg",
+			"type": "image",
+			"name": "C-4_jpg"
+		},
+		{
+			"url": "assets/card/C-5.jpg",
+			"type": "image",
+			"name": "C-5_jpg"
+		},
+		{
+			"url": "assets/card/C-6.jpg",
+			"type": "image",
+			"name": "C-6_jpg"
+		},
+		{
+			"url": "assets/card/C-7.jpg",
+			"type": "image",
+			"name": "C-7_jpg"
+		},
+		{
+			"url": "assets/card/C-8.jpg",
+			"type": "image",
+			"name": "C-8_jpg"
+		},
+		{
+			"url": "assets/card/C-9.jpg",
+			"type": "image",
+			"name": "C-9_jpg"
+		},
+		{
+			"url": "assets/card/D-1.jpg",
+			"type": "image",
+			"name": "D-1_jpg"
+		},
+		{
+			"url": "assets/card/D-10.jpg",
+			"type": "image",
+			"name": "D-10_jpg"
+		},
+		{
+			"url": "assets/card/D-11.jpg",
+			"type": "image",
+			"name": "D-11_jpg"
+		},
+		{
+			"url": "assets/card/D-12.jpg",
+			"type": "image",
+			"name": "D-12_jpg"
+		},
+		{
+			"url": "assets/card/D-13.jpg",
+			"type": "image",
+			"name": "D-13_jpg"
+		},
+		{
+			"url": "assets/card/D-2.jpg",
+			"type": "image",
+			"name": "D-2_jpg"
+		},
+		{
+			"url": "assets/card/D-3.jpg",
+			"type": "image",
+			"name": "D-3_jpg"
+		},
+		{
+			"url": "assets/card/D-4.jpg",
+			"type": "image",
+			"name": "D-4_jpg"
+		},
+		{
+			"url": "assets/card/D-5.jpg",
+			"type": "image",
+			"name": "D-5_jpg"
+		},
+		{
+			"url": "assets/card/D-6.jpg",
+			"type": "image",
+			"name": "D-6_jpg"
+		},
+		{
+			"url": "assets/card/D-7.jpg",
+			"type": "image",
+			"name": "D-7_jpg"
+		},
+		{
+			"url": "assets/card/D-8.jpg",
+			"type": "image",
+			"name": "D-8_jpg"
+		},
+		{
+			"url": "assets/card/D-9.jpg",
+			"type": "image",
+			"name": "D-9_jpg"
+		},
+		{
+			"url": "assets/card/K-1.jpg",
+			"type": "image",
+			"name": "K-1_jpg"
+		},
+		{
+			"url": "assets/card/K-2.jpg",
+			"type": "image",
+			"name": "K-2_jpg"
+		},
+		{
+			"url": "assets/card/cardback.png",
+			"type": "image",
+			"name": "cardback_png"
+		},
+		{
+			"url": "assets/card/R-1.jpg",
+			"type": "image",
+			"name": "R-1_jpg"
+		},
+		{
+			"url": "assets/card/R-2.jpg",
+			"type": "image",
+			"name": "R-2_jpg"
+		},
+		{
+			"url": "assets/card/R-3.jpg",
+			"type": "image",
+			"name": "R-3_jpg"
+		},
+		{
+			"url": "assets/card/R-4.jpg",
+			"type": "image",
+			"name": "R-4_jpg"
+		},
+		{
+			"url": "assets/card/R-5.jpg",
+			"type": "image",
+			"name": "R-5_jpg"
+		},
+		{
+			"url": "assets/card/R-6.jpg",
+			"type": "image",
+			"name": "R-6_jpg"
+		},
+		{
+			"url": "assets/card/R-7.jpg",
+			"type": "image",
+			"name": "R-7_jpg"
+		},
+		{
+			"url": "assets/card/R-8.jpg",
+			"type": "image",
+			"name": "R-8_jpg"
+		},
+		{
+			"url": "assets/card/R-9.jpg",
+			"type": "image",
+			"name": "R-9_jpg"
+		},
+		{
+			"url": "assets/card/R-10.jpg",
+			"type": "image",
+			"name": "R-10_jpg"
+		},
+		{
+			"url": "assets/card/R-11.jpg",
+			"type": "image",
+			"name": "R-11_jpg"
+		},
+		{
+			"url": "assets/card/R-12.jpg",
+			"type": "image",
+			"name": "R-12_jpg"
+		},
+		{
+			"url": "assets/card/R-13.jpg",
+			"type": "image",
+			"name": "R-13_jpg"
+		}
+	]
+}

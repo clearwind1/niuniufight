@@ -9,6 +9,8 @@ class Player extends egret.DisplayObjectContainer {
 	public betgold: number;				//赌注
 	public handcardarr: CardSprite[];		//手牌
 	private isBanker: boolean;				//是否庄家
+	public isAI: boolean;
+	private handcardnumber: number;
 	public constructor() {
 		super();
 		this.initdata();
@@ -19,8 +21,10 @@ class Player extends egret.DisplayObjectContainer {
 	private initdata() {
 		this.handcardarr = [];
 		this.isBanker = false;
+		this.isAI = false;
 		this.gold = 10000;
 		this.betgold = 0;
+		this.handcardnumber = 0;
 	}
 	private showhead() {
 		this.headimg = new MyBitmap(RES.getRes('head1_png'), 0, 0);
@@ -108,5 +112,24 @@ class Player extends egret.DisplayObjectContainer {
 
 	public showcallbtn(bshow: boolean) {
 		this.callbtncont.visible = bshow;
+	}
+
+	public updatahandcardnumber() {
+		this.handcardnumber = 0;
+		for (let i: number = 0; i < this.handcardarr.length; i++){
+            let card: CardSprite = <CardSprite>this.handcardarr[i];
+            let cardnumber = 0;
+            if (card.cardnumber >= 10) {
+                cardnumber = 10;
+            } else {
+                cardnumber = card.cardnumber;
+            }
+            this.handcardnumber += cardnumber;
+        }
+        this.handcardnumber = (this.handcardnumber > 21) ? 0 : this.handcardnumber;
+	}
+
+	public getHandcardnumber(): number{
+		return this.handcardnumber;
 	}
 }

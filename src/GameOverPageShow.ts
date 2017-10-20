@@ -22,35 +22,35 @@ class GameOverPageShow extends Othercontainer {
         text.setText('游戏结束');
         this.addChild(text);
 
-        var text = new GameUtil.MyTextField(posx, 250, 40, 0.5, 0.5);
-        text.setText('当前分数:' + GameData._i().GameScore);
-        text.textColor = 0x75bfea;
-        cont.addChild(text);
+        // var text = new GameUtil.MyTextField(posx, 250, 40, 0.5, 0.5);
+        // text.setText('当前分数:' + GameData._i().GameScore);
+        // text.textColor = 0x75bfea;
+        // cont.addChild(text);
 
-        var text = new GameUtil.MyTextField(posx, 300, 40, 0.5, 0.5);
-        text.setText('当前关卡:' + GameData._i().GameLevel);
-        text.textColor = 0x75bfea;
-        cont.addChild(text);
+        // var text = new GameUtil.MyTextField(posx, 300, 40, 0.5, 0.5);
+        // text.setText('当前关卡:' + GameData._i().GameLevel);
+        // text.textColor = 0x75bfea;
+        // cont.addChild(text);
 
         GameUtil.doAction(cont, DisType.Alpha, 500);
 
-        var fun = this.turnback;
-        var btn = new GameUtil.Menu(this, '', '', fun);
-        btn.setScaleMode();
-        btn.addButtonShap(GameUtil.createRect(0, 0, 300, 60, 1, 0x3399fe, 40, 50), -150, -30);
-        btn.addButtonText('返      回', 30);
-        this.addChild(btn);
-        btn.x = posx - 200;
-        btn.y = posy;
-        GameUtil.doAction(btn, DisType.LeftTRight, 1500, btn.x);
+        // var fun = this.turnback;
+        // var btn = new GameUtil.Menu(this, '', '', fun);
+        // btn.setScaleMode();
+        // btn.addButtonShap(GameUtil.createRect(0, 0, 300, 60, 1, 0x3399fe, 40, 50), -150, -30);
+        // btn.addButtonText('返      回', 30);
+        // this.addChild(btn);
+        // btn.x = posx - 200;
+        // btn.y = posy;
+        // GameUtil.doAction(btn, DisType.LeftTRight, 1500, btn.x);
 
         var fun = this.relife;
         var btn = new GameUtil.Menu(this, '', '', fun);
         btn.setScaleMode();
         btn.addButtonShap(GameUtil.createRect(0, 0, 300, 60, 1, 0x3399fe, 40, 50), -150, -30);
-        btn.addButtonText('复      活', 30);
+        btn.addButtonText('再来一局', 30);
         this.addChild(btn);
-        btn.x = posx + 200;
+        btn.x = posx;
         btn.y = posy;
         GameUtil.doAction(btn, DisType.RightTLeft, 1500, btn.x);
 

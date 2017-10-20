@@ -19,8 +19,14 @@ var GameScene = (function (_super) {
     __extends(GameScene, _super);
     function GameScene() {
         var _this = _super.call(this) || this;
-        //显示玩家
+        /**
+         * 显示玩家
+         */
         _this.player = [];
+        /**
+         * 开始倒计时
+         * */
+        _this.downtime = 3;
         _this.btouch = false;
         return _this;
     }
@@ -33,6 +39,7 @@ var GameScene = (function (_super) {
         this.showbg();
         this.bindkeyboard();
         this.gameinterval();
+        this.startdown();
     };
     /**
      * 初始化数据
@@ -72,14 +79,18 @@ var GameScene = (function (_super) {
             this.player[i].x = pos[i].x;
             this.player[i].y = pos[i].y;
             this.player[i].rotation = i * -90;
+            if (i != 0) {
+                this.player[i].isAI = true; //设置为AI
+            }
             this.addChild(this.player[i]);
         }
         this.bankerID = RandomUtils.limitInteger(0, 3);
-        this.bankerID = 2;
         this.player[this.bankerID].setBanker(true);
         this.currPlayerID = (this.bankerID + 1) % 4;
     };
-    //显示中间的牌库
+    /**
+     * 显示中间的牌库
+     */
     GameScene.prototype.showCardstack = function () {
         for (var i = 0; i < 10; i++) {
             var card = new CardSprite(1, CardType.Black);
@@ -92,9 +103,9 @@ var GameScene = (function (_super) {
         var _this = this;
         this.betframecont = new egret.Sprite();
         this.addChild(this.betframecont);
-        this.betframecont.visible = true;
+        this.betframecont.visible = false;
         var betnumber = 10;
-        var totalnumber = this.player[0].gold;
+        var totalnumber = this.player[0].gold - betnumber;
         var curbetnumber = 10;
         //背景框
         var bgframe = GameUtil.createRect(this.mStageW / 2 - 300, this.mStageH / 2 - 200, 600, 400, 1, 0x423255);
@@ -149,6 +160,7 @@ var GameScene = (function (_super) {
             _this.player[0].betgold = betnumber;
             _this.player[0].updatagold();
             _this.betframecont.visible = false;
+            _this.showWaiting(400);
         });
         btn.addButtonShap(GameUtil.createRect(0, 0, 200, 40, 1, 0x3399fe, 20, 30), -100, -20);
         btn.addButtonText('确   定', 30);
@@ -168,12 +180,64 @@ var GameScene = (function (_super) {
             text.textColor = 0xabead9;
             this.betframecont.addChild(text);
         }
+    };
+    /**
+     * 显示下注框
+     */
+    GameScene.prototype.showbetframe = function () {
         if (this.bankerID == 0) {
-            this.showbetframe(false);
+            this.betframecont.visible = false;
+            this.showWaiting(1000);
+            return;
+        }
+        else {
+            this.betframecont.getChildByName('text3').setText('' + 10);
+            this.betframecont.getChildByName('text2').setText('' + (this.player[0].gold - 10));
+            this.betframecont.visible = true;
         }
     };
-    GameScene.prototype.showbetframe = function (bshow) {
-        this.betframecont.visible = bshow;
+    /**
+     * 等待界面
+     */
+    GameScene.prototype.showWaiting = function (delay) {
+        var _this = this;
+        this.addChild(GameUtil.WaitServerPanel.getInstace());
+        GameUtil.WaitServerPanel.getInstace().wainttext.size = 30;
+        GameUtil.WaitServerPanel.getInstace().wainttext.setText('请等待其他玩家下注');
+        egret.setTimeout(function () {
+            _this.removeChild(GameUtil.WaitServerPanel.getInstace());
+            //为AI设置下注
+            _this.AIbet();
+            _this.sendcard(true);
+        }, this, delay);
+    };
+    /**
+     * AI下注
+     */
+    GameScene.prototype.AIbet = function () {
+        for (var i = 0; i < 4; i++) {
+            if (this.player[i].isAI && !this.player[i].getBanker()) {
+                this.player[i].betgold = RandomUtils.limitInteger(1, 10) * 10;
+                this.player[i].gold -= this.player[i].betgold;
+                this.player[i].updatagold();
+            }
+        }
+    };
+    GameScene.prototype.startdown = function () {
+        var txte = '' + this.downtime;
+        if (this.downtime == 0) {
+            txte = "READY GO";
+        }
+        else if (this.downtime < 0) {
+            this.removeChild(GameUtil.WaitServerPanel.getInstace());
+            this.showbetframe();
+            return;
+        }
+        this.addChild(GameUtil.WaitServerPanel.getInstace());
+        GameUtil.WaitServerPanel.getInstace().wainttext.size = 100;
+        GameUtil.WaitServerPanel.getInstace().wainttext.setText('' + txte);
+        this.downtime--;
+        egret.setTimeout(this.startdown, this, 1000);
     };
     GameScene.prototype.showsendcardbtn = function () {
         var fun = this.sendcard;
@@ -186,7 +250,9 @@ var GameScene = (function (_super) {
         this.sendcardbtn.y = this.mStageH / 2 + 150;
         this.sendcardbtn.visible = false;
     };
-    //发牌 bsendall: 是否发全部人
+    /**
+     * 发牌 bsendall: 是否发全部人
+     */
     GameScene.prototype.sendcard = function (bsendall) {
         var _this = this;
         //console.log('id===', id);
@@ -209,6 +275,7 @@ var GameScene = (function (_super) {
         this.addChild(newcard);
         //放入玩家手中
         this.player[id].handcardarr.push(newcard);
+        this.player[id].updatahandcardnumber();
         //牌的位置         
         var posx = this.player[id].x;
         var posy = this.player[id].y;
@@ -231,13 +298,20 @@ var GameScene = (function (_super) {
             if (_this.player[id].handcardarr.length >= 5) {
                 _this.nextplayercall();
             }
+            else {
+                if (!bsendall) {
+                    _this.playercall();
+                }
+            }
             if (bsendall) {
                 _this.currPlayerID = (_this.currPlayerID + 1) % 4;
                 _this.sendcard(true);
             }
         }, this);
     };
-    //获取牌库里任意一张牌
+    /**
+     * 获取牌库里任意一张牌
+     */
     GameScene.prototype.getrandcard = function () {
         var cardselet = this.cardarr[RandomUtils.limitInteger(0, this.cardarr.length - 3)];
         var cardtype = Math.floor((cardselet - 1) / 13);
@@ -247,23 +321,88 @@ var GameScene = (function (_super) {
         this.cardarr.splice(index, 1);
         return card;
     };
-    //第一次玩家叫牌
+    /**
+     * 第一次玩家叫牌
+     */
     GameScene.prototype.playercall = function () {
-        this.player[this.currPlayerID].showcallbtn(true);
+        var _this = this;
+        if (this.currPlayerID == 0) {
+            this.player[this.currPlayerID].showcallbtn(true);
+        }
+        else {
+            //AI 叫牌
+            if (this.player[this.currPlayerID].getHandcardnumber() >= 17 || this.player[this.currPlayerID].getHandcardnumber() == 0) {
+                egret.setTimeout(this.nextplayercall, this, 500);
+            }
+            else {
+                egret.setTimeout(function () {
+                    _this.sendcard(false);
+                }, this, 500);
+            }
+        }
     };
-    //下一个玩家叫牌
+    /**
+     * 下一个玩家叫牌
+     */
     GameScene.prototype.nextplayercall = function () {
+        var _this = this;
         this.player[this.currPlayerID].showcallbtn(false);
         if (this.currPlayerID == this.bankerID) {
             //清算
+            egret.setTimeout(this.caculateGame, this, 1000);
+            //this.caculateGame();
         }
         else {
             this.currPlayerID = (this.currPlayerID + 1) % 4;
-            this.player[this.currPlayerID].showcallbtn(true);
+            if (this.currPlayerID == 0) {
+                this.player[this.currPlayerID].showcallbtn(true);
+            }
+            else {
+                //AI 叫牌
+                if (this.player[this.currPlayerID].getHandcardnumber() >= 17 || this.player[this.currPlayerID].getHandcardnumber() == 0) {
+                    egret.setTimeout(this.nextplayercall, this, 500);
+                }
+                else {
+                    egret.setTimeout(function () {
+                        _this.sendcard(false);
+                    }, this, 500);
+                }
+            }
         }
     };
     //清算
     GameScene.prototype.caculateGame = function () {
+        //计算庄家手牌点数
+        var bankercardnumber = this.player[this.bankerID].getHandcardnumber();
+        var banker = this.player[this.bankerID];
+        for (var i = 0; i < 4; i++) {
+            var player = this.player[i];
+            if (!player.getBanker()) {
+                var playercardnumber = player.getHandcardnumber();
+                if (playercardnumber > bankercardnumber) {
+                    var betnumber = player.betgold;
+                    banker.gold -= betnumber;
+                    banker.updatagold();
+                    player.gold += (betnumber * 2);
+                    player.betgold = 0;
+                    player.updatagold();
+                }
+                else if (playercardnumber == bankercardnumber) {
+                    player.gold += player.betgold;
+                    player.betgold = 0;
+                    player.updatagold();
+                }
+                else {
+                    var betnumber = player.betgold;
+                    banker.gold += betnumber;
+                    banker.updatagold();
+                    player.betgold = 0;
+                    player.updatagold();
+                }
+            }
+        }
+        // this.restart();
+        this.gameover();
     };
     /**
      * 游戏定时器
@@ -335,7 +474,22 @@ var GameScene = (function (_super) {
      * 游戏结束
      */
     GameScene.prototype.gameover = function () {
+        var _this = this;
         console.log("GameOver");
+        for (var i = 0; i < 4; i++) {
+            var _loop_1 = function (j) {
+                var card = this_1.player[i].handcardarr[j];
+                egret.Tween.get(card).to({ x: this_1.mStageW / 2, y: this_1.mStageH / 2 }, 300).call(function () {
+                    _this.removeChild(card);
+                }, this_1);
+            };
+            var this_1 = this;
+            for (var j = 0; j < this.player[i].handcardarr.length; j++) {
+                _loop_1(j);
+            }
+            this.player[i].handcardarr = [];
+            this.player[i].setBanker(false);
+        }
         this.clearinter();
         GameData._i().GameOver = true;
         this.addChild(new GameOverPageShow());
@@ -368,6 +522,11 @@ var GameScene = (function (_super) {
      * 重新开始游戏
      */
     GameScene.prototype.restart = function () {
+        this.bankerID = RandomUtils.limitInteger(0, 3);
+        this.player[this.bankerID].setBanker(true);
+        this.currPlayerID = (this.bankerID + 1) % 4;
+        this.downtime = 3;
+        this.startdown();
     };
     /**
      * 需要绑定的键盘事件

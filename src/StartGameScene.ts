@@ -42,7 +42,7 @@ class StartGameScene extends GameUtil.BassPanel {
         gametitletext.textColor = 0x75bfea;
         this.addChild(gametitletext);
 
-        this.addChild(new GameMenus(DisType.LeftTRight));
+        this.addChild(new GameMenus(RandomUtils.limitInteger(DisType.NULL,DisType.Alpha)));
 
     }
 

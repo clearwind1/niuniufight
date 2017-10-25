@@ -1,6 +1,3 @@
-/**
- * 玩家类
- */
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
@@ -14,6 +11,16 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+/**
+ * 玩家类
+ */
+var JUDEWIN;
+(function (JUDEWIN) {
+    JUDEWIN[JUDEWIN["LOST"] = 0] = "LOST";
+    JUDEWIN[JUDEWIN["WIN"] = 1] = "WIN";
+    JUDEWIN[JUDEWIN["DRAW"] = 2] = "DRAW";
+})(JUDEWIN || (JUDEWIN = {}));
+;
 var Player = (function (_super) {
     __extends(Player, _super);
     function Player() {
@@ -32,9 +39,11 @@ var Player = (function (_super) {
         this.handcardarr = [];
         this.isBanker = false;
         this.isAI = false;
+        this.isWin = JUDEWIN.LOST;
         this.gold = 10000;
         this.betgold = 0;
         this.handcardnumber = 0;
+        this.winbet = 0;
     };
     Player.prototype.showhead = function () {
         this.headimg = new MyBitmap(RES.getRes('head1_png'), 0, 0);

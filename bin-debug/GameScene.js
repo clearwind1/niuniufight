@@ -20,10 +20,6 @@ var GameScene = (function (_super) {
     function GameScene() {
         var _this = _super.call(this) || this;
         /**
-         * 显示玩家
-         */
-        _this.player = [];
-        /**
          * 开始倒计时
          * */
         _this.downtime = 3;
@@ -71,21 +67,25 @@ var GameScene = (function (_super) {
         this.addbetframe();
         // this.addChild(GameScore._i());
     };
+    /**
+     * 显示玩家
+     */
     GameScene.prototype.showplayer = function () {
         var dis = 250;
         var pos = [{ x: this.mStageW / 2 - dis, y: this.mStageH - 80 }, { x: this.mStageW - 80, y: this.mStageH / 2 + dis }, { x: this.mStageW / 2 + dis, y: 80 }, { x: 80, y: this.mStageH / 2 - dis }];
         for (var i = 0; i < 4; i++) {
-            this.player[i] = new Player();
-            this.player[i].x = pos[i].x;
-            this.player[i].y = pos[i].y;
-            this.player[i].rotation = i * -90;
+            GameData._i().player[i] = new Player();
+            GameData._i().player[i].x = pos[i].x;
+            GameData._i().player[i].y = pos[i].y;
+            GameData._i().player[i].rotation = i * -90;
             if (i != 0) {
-                this.player[i].isAI = true; //设置为AI
+                GameData._i().player[i].isAI = true; //设置为AI
             }
-            this.addChild(this.player[i]);
+            this.addChild(GameData._i().player[i]);
         }
         this.bankerID = RandomUtils.limitInteger(0, 3);
-        this.player[this.bankerID].setBanker(true);
+        GameData._i().bankerID = this.bankerID;
+        GameData._i().player[this.bankerID].setBanker(true);
         this.currPlayerID = (this.bankerID + 1) % 4;
     };
     /**
@@ -105,7 +105,7 @@ var GameScene = (function (_super) {
         this.addChild(this.betframecont);
         this.betframecont.visible = false;
         var betnumber = 10;
-        var totalnumber = this.player[0].gold - betnumber;
+        var totalnumber = GameData._i().player[0].gold - betnumber;
         var curbetnumber = 10;
         //背景框
         var bgframe = GameUtil.createRect(this.mStageW / 2 - 300, this.mStageH / 2 - 200, 600, 400, 1, 0x423255);
@@ -132,14 +132,14 @@ var GameScene = (function (_super) {
                 curbetnumber = betnumbers[btnid];
             }
             else if (btnid == 3) {
-                betnumber = Math.min(betnumber += curbetnumber, _this.player[0].gold);
-                totalnumber = _this.player[0].gold - betnumber;
+                betnumber = Math.min(betnumber += curbetnumber, GameData._i().player[0].gold);
+                totalnumber = GameData._i().player[0].gold - betnumber;
                 _this.betframecont.getChildByName('text3').setText('' + betnumber);
                 _this.betframecont.getChildByName('text2').setText('' + totalnumber);
             }
             else {
                 betnumber = Math.max(betnumber -= curbetnumber, 10);
-                totalnumber = _this.player[0].gold - betnumber;
+                totalnumber = GameData._i().player[0].gold - betnumber;
                 _this.betframecont.getChildByName('text3').setText('' + betnumber);
                 _this.betframecont.getChildByName('text2').setText('' + totalnumber);
             }
@@ -156,9 +156,9 @@ var GameScene = (function (_super) {
         shap.y = bgframe.y + btnpos[0].y - 37;
         this.betframecont.addChild(shap);
         var btn = new GameUtil.Menu(this, '', '', function () {
-            _this.player[0].gold = totalnumber;
-            _this.player[0].betgold = betnumber;
-            _this.player[0].updatagold();
+            GameData._i().player[0].gold = totalnumber;
+            GameData._i().player[0].betgold = betnumber;
+            GameData._i().player[0].updatagold();
             _this.betframecont.visible = false;
             _this.showWaiting(400);
         });
@@ -191,8 +191,8 @@ var GameScene = (function (_super) {
             return;
         }
         else {
-            this.betframecont.getChildByName('text3').setText('' + 10);
-            this.betframecont.getChildByName('text2').setText('' + (this.player[0].gold - 10));
+            var betnumber = Number(this.betframecont.getChildByName('text3').text);
+            this.betframecont.getChildByName('text2').setText('' + (GameData._i().player[0].gold - betnumber));
             this.betframecont.visible = true;
         }
     };
@@ -202,7 +202,7 @@ var GameScene = (function (_super) {
     GameScene.prototype.showWaiting = function (delay) {
         var _this = this;
         this.addChild(GameUtil.WaitServerPanel.getInstace());
-        GameUtil.WaitServerPanel.getInstace().wainttext.size = 30;
+        GameUtil.WaitServerPanel.getInstace().wainttext.size = 50;
         GameUtil.WaitServerPanel.getInstace().wainttext.setText('请等待其他玩家下注');
         egret.setTimeout(function () {
             _this.removeChild(GameUtil.WaitServerPanel.getInstace());
@@ -216,10 +216,10 @@ var GameScene = (function (_super) {
      */
     GameScene.prototype.AIbet = function () {
         for (var i = 0; i < 4; i++) {
-            if (this.player[i].isAI && !this.player[i].getBanker()) {
-                this.player[i].betgold = RandomUtils.limitInteger(1, 10) * 10;
-                this.player[i].gold -= this.player[i].betgold;
-                this.player[i].updatagold();
+            if (GameData._i().player[i].isAI && !GameData._i().player[i].getBanker()) {
+                GameData._i().player[i].betgold = RandomUtils.limitInteger(1, 20) * 10;
+                GameData._i().player[i].gold -= GameData._i().player[i].betgold;
+                GameData._i().player[i].updatagold();
             }
         }
     };
@@ -257,7 +257,7 @@ var GameScene = (function (_super) {
         var _this = this;
         //console.log('id===', id);
         this.sendcardbtn.visible = false;
-        if (bsendall && this.player[this.bankerID].handcardarr.length == 2) {
+        if (bsendall && GameData._i().player[this.bankerID].handcardarr.length == 2) {
             this.currPlayerID = (this.bankerID + 1) % 4;
             this.playercall();
             return;
@@ -274,28 +274,30 @@ var GameScene = (function (_super) {
         newcard.y = this.mStageH / 2;
         this.addChild(newcard);
         //放入玩家手中
-        this.player[id].handcardarr.push(newcard);
-        this.player[id].updatahandcardnumber();
+        GameData._i().player[id].handcardarr.push(newcard);
+        GameData._i().player[id].updatahandcardnumber();
         //牌的位置         
-        var posx = this.player[id].x;
-        var posy = this.player[id].y;
+        var posx = GameData._i().player[id].x;
+        var posy = GameData._i().player[id].y;
         var dis = 110;
-        if (this.player[id].rotation == 0) {
-            posx = this.player[id].x + 40 + dis * (this.player[id].handcardarr.length);
+        if (GameData._i().player[id].rotation == 0) {
+            posx = GameData._i().player[id].x + 40 + dis * (GameData._i().player[id].handcardarr.length);
         }
-        else if (this.player[id].rotation == -90) {
-            posy = this.player[id].y - 40 - dis * (this.player[id].handcardarr.length);
+        else if (GameData._i().player[id].rotation == -90) {
+            posy = GameData._i().player[id].y - 40 - dis * (GameData._i().player[id].handcardarr.length);
         }
-        else if (this.player[id].rotation == -180) {
-            posx = this.player[id].x - 40 - dis * (this.player[id].handcardarr.length);
+        else if (GameData._i().player[id].rotation == -180) {
+            posx = GameData._i().player[id].x - 40 - dis * (GameData._i().player[id].handcardarr.length);
         }
         else {
-            posy = this.player[id].y + 40 + dis * (this.player[id].handcardarr.length);
+            posy = GameData._i().player[id].y + 40 + dis * (GameData._i().player[id].handcardarr.length);
         }
-        egret.Tween.get(newcard).to({ x: posx, y: posy, rotation: this.player[id].rotation }, 500).call(function () {
-            newcard.showfront();
+        egret.Tween.get(newcard).to({ x: posx, y: posy, rotation: GameData._i().player[id].rotation }, 500).call(function () {
+            if (id == 0) {
+                newcard.showfront();
+            }
             _this.bsendcard = false;
-            if (_this.player[id].handcardarr.length >= 5) {
+            if (GameData._i().player[id].handcardarr.length >= 5) {
                 _this.nextplayercall();
             }
             else {
@@ -327,11 +329,11 @@ var GameScene = (function (_super) {
     GameScene.prototype.playercall = function () {
         var _this = this;
         if (this.currPlayerID == 0) {
-            this.player[this.currPlayerID].showcallbtn(true);
+            GameData._i().player[this.currPlayerID].showcallbtn(true);
         }
         else {
             //AI 叫牌
-            if (this.player[this.currPlayerID].getHandcardnumber() >= 17 || this.player[this.currPlayerID].getHandcardnumber() == 0) {
+            if (GameData._i().player[this.currPlayerID].getHandcardnumber() >= RandomUtils.limitInteger(17, 21) || GameData._i().player[this.currPlayerID].getHandcardnumber() == 0) {
                 egret.setTimeout(this.nextplayercall, this, 500);
             }
             else {
@@ -346,7 +348,7 @@ var GameScene = (function (_super) {
      */
     GameScene.prototype.nextplayercall = function () {
         var _this = this;
-        this.player[this.currPlayerID].showcallbtn(false);
+        GameData._i().player[this.currPlayerID].showcallbtn(false);
         if (this.currPlayerID == this.bankerID) {
             //清算
             egret.setTimeout(this.caculateGame, this, 1000);
@@ -355,11 +357,11 @@ var GameScene = (function (_super) {
         else {
             this.currPlayerID = (this.currPlayerID + 1) % 4;
             if (this.currPlayerID == 0) {
-                this.player[this.currPlayerID].showcallbtn(true);
+                GameData._i().player[this.currPlayerID].showcallbtn(true);
             }
             else {
                 //AI 叫牌
-                if (this.player[this.currPlayerID].getHandcardnumber() >= 17 || this.player[this.currPlayerID].getHandcardnumber() == 0) {
+                if (GameData._i().player[this.currPlayerID].getHandcardnumber() >= RandomUtils.limitInteger(17, 21) || GameData._i().player[this.currPlayerID].getHandcardnumber() == 0) {
                     egret.setTimeout(this.nextplayercall, this, 500);
                 }
                 else {
@@ -373,10 +375,10 @@ var GameScene = (function (_super) {
     //清算
     GameScene.prototype.caculateGame = function () {
         //计算庄家手牌点数
-        var bankercardnumber = this.player[this.bankerID].getHandcardnumber();
-        var banker = this.player[this.bankerID];
+        var bankercardnumber = GameData._i().player[this.bankerID].getHandcardnumber();
+        var banker = GameData._i().player[this.bankerID];
         for (var i = 0; i < 4; i++) {
-            var player = this.player[i];
+            var player = GameData._i().player[i];
             if (!player.getBanker()) {
                 var playercardnumber = player.getHandcardnumber();
                 if (playercardnumber > bankercardnumber) {
@@ -384,25 +386,49 @@ var GameScene = (function (_super) {
                     banker.gold -= betnumber;
                     banker.updatagold();
                     player.gold += (betnumber * 2);
-                    player.betgold = 0;
+                    //player.betgold = 0;
                     player.updatagold();
+                    player.isWin = JUDEWIN.WIN;
+                    GameData._i().bankerwinCount -= betnumber;
                 }
                 else if (playercardnumber == bankercardnumber) {
                     player.gold += player.betgold;
-                    player.betgold = 0;
+                    //player.betgold = 0;
                     player.updatagold();
+                    player.isWin = JUDEWIN.DRAW;
                 }
                 else {
                     var betnumber = player.betgold;
                     banker.gold += betnumber;
                     banker.updatagold();
-                    player.betgold = 0;
+                    //player.betgold = 0;
                     player.updatagold();
+                    player.isWin = JUDEWIN.LOST;
+                    GameData._i().bankerwinCount += betnumber;
                 }
             }
         }
+        if (GameData._i().bankerwinCount < 0) {
+            GameData._i().player[this.bankerID].isWin = JUDEWIN.LOST;
+        }
+        else if (GameData._i().bankerwinCount == 0) {
+            GameData._i().player[this.bankerID].isWin = JUDEWIN.DRAW;
+        }
+        else {
+            GameData._i().player[this.bankerID].isWin = JUDEWIN.WIN;
+        }
         // this.restart();
-        this.gameover();
+        // this.gameover();
+        this.showallcard();
+    };
+    GameScene.prototype.showallcard = function () {
+        for (var i = 1; i < 4; i++) {
+            for (var j = 0; j < GameData._i().player[i].handcardarr.length; j++) {
+                var card = GameData._i().player[i].handcardarr[j];
+                card.showfront();
+            }
+        }
+        egret.setTimeout(this.gameover, this, 2500);
     };
     /**
      * 游戏定时器
@@ -478,17 +504,17 @@ var GameScene = (function (_super) {
         console.log("GameOver");
         for (var i = 0; i < 4; i++) {
             var _loop_1 = function (j) {
-                var card = this_1.player[i].handcardarr[j];
+                var card = GameData._i().player[i].handcardarr[j];
                 egret.Tween.get(card).to({ x: this_1.mStageW / 2, y: this_1.mStageH / 2 }, 300).call(function () {
                     _this.removeChild(card);
                 }, this_1);
             };
             var this_1 = this;
-            for (var j = 0; j < this.player[i].handcardarr.length; j++) {
+            for (var j = 0; j < GameData._i().player[i].handcardarr.length; j++) {
                 _loop_1(j);
             }
-            this.player[i].handcardarr = [];
-            this.player[i].setBanker(false);
+            GameData._i().player[i].handcardarr = [];
+            GameData._i().player[i].setBanker(false);
         }
         this.clearinter();
         GameData._i().GameOver = true;
@@ -522,8 +548,17 @@ var GameScene = (function (_super) {
      * 重新开始游戏
      */
     GameScene.prototype.restart = function () {
+        GameData._i().bankerwinCount = 0;
+        for (var i = 0; i < 54; i++) {
+            this.cardarr[i] = i + 1;
+        }
+        for (var i = 0; i < 4; i++) {
+            GameData._i().player[i].betgold = 0;
+            GameData._i().player[i].updatagold();
+        }
         this.bankerID = RandomUtils.limitInteger(0, 3);
-        this.player[this.bankerID].setBanker(true);
+        GameData._i().bankerID = this.bankerID;
+        GameData._i().player[this.bankerID].setBanker(true);
         this.currPlayerID = (this.bankerID + 1) % 4;
         this.downtime = 3;
         this.startdown();

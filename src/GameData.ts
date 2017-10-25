@@ -12,6 +12,9 @@ class GameData {
     public GameLevel: number;               //游戏等级
     public GameScore: number;               //游戏分数
     public HeightScore: number;             //最高分数
+    public player: Player[] = [];
+    public bankerID: number;
+    public bankerwinCount: number;          //庄家的结算
 
     public constructor() {
         this.init();
@@ -25,6 +28,8 @@ class GameData {
         this.GameScore = 0;
         this.GameLevel = 1;
         this.HeightScore = 0;
+        this.bankerwinCount = 0;
+        this.bankerID = 0;
     }
 
     private static _inst:GameData = null;

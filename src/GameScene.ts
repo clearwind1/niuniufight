@@ -65,22 +65,22 @@ class GameScene extends GameUtil.BassPanel {
     /**
      * 显示玩家
      */
-    private player: Player[] = [];
     private showplayer() {
         let dis = 250;
         let pos = [{ x: this.mStageW / 2 - dis, y: this.mStageH - 80 }, { x: this.mStageW - 80, y: this.mStageH / 2 + dis }, { x: this.mStageW / 2 + dis, y: 80 }, { x: 80, y: this.mStageH / 2 - dis }];
         for (let i: number = 0; i < 4; i++) {
-            this.player[i] = new Player();
-            this.player[i].x = pos[i].x;
-            this.player[i].y = pos[i].y;
-            this.player[i].rotation = i * -90;
+            GameData._i().player[i] = new Player();
+            GameData._i().player[i].x = pos[i].x;
+            GameData._i().player[i].y = pos[i].y;
+            GameData._i().player[i].rotation = i * -90;
             if (i != 0) {
-                this.player[i].isAI = true;     //设置为AI
+                GameData._i().player[i].isAI = true;     //设置为AI
             }
-            this.addChild(this.player[i]);
+            this.addChild(GameData._i().player[i]);
         }
         this.bankerID = RandomUtils.limitInteger(0, 3);
-        this.player[this.bankerID].setBanker(true);
+        GameData._i().bankerID = this.bankerID;
+        GameData._i().player[this.bankerID].setBanker(true);
         this.currPlayerID = (this.bankerID + 1) % 4;
     }
     /**
@@ -97,14 +97,14 @@ class GameScene extends GameUtil.BassPanel {
     /**
      * 下注界面
      */
-    private betframecont: egret.Sprite;
+    private betframecont: egret.Sprite;     
     public addbetframe() {
         this.betframecont = new egret.Sprite();
         this.addChild(this.betframecont);
         this.betframecont.visible = false;
 
         let betnumber: number = 10;
-        let totalnumber: number = this.player[0].gold - betnumber;
+        let totalnumber: number = GameData._i().player[0].gold - betnumber;
         let curbetnumber: number = 10;
 
         //背景框
@@ -132,13 +132,13 @@ class GameScene extends GameUtil.BassPanel {
                 var betnumbers = [10, 50, 100];
                 curbetnumber = betnumbers[btnid];
             } else if (btnid == 3) {
-                betnumber = Math.min(betnumber += curbetnumber, this.player[0].gold);
-                totalnumber = this.player[0].gold - betnumber;
+                betnumber = Math.min(betnumber += curbetnumber, GameData._i().player[0].gold);
+                totalnumber = GameData._i().player[0].gold - betnumber;
                 (<GameUtil.MyTextField>this.betframecont.getChildByName('text3')).setText('' + betnumber);
                 (<GameUtil.MyTextField>this.betframecont.getChildByName('text2')).setText('' + totalnumber);
             } else {
                 betnumber = Math.max(betnumber -= curbetnumber, 10);
-                totalnumber = this.player[0].gold - betnumber;
+                totalnumber = GameData._i().player[0].gold - betnumber;
                 (<GameUtil.MyTextField>this.betframecont.getChildByName('text3')).setText('' + betnumber);
                 (<GameUtil.MyTextField>this.betframecont.getChildByName('text2')).setText('' + totalnumber);
             }
@@ -156,9 +156,9 @@ class GameScene extends GameUtil.BassPanel {
         this.betframecont.addChild(shap);
 
         var btn = new GameUtil.Menu(this, '', '', () => {
-            this.player[0].gold = totalnumber;
-            this.player[0].betgold = betnumber;
-            this.player[0].updatagold();
+            GameData._i().player[0].gold = totalnumber;
+            GameData._i().player[0].betgold = betnumber;
+            GameData._i().player[0].updatagold();
             this.betframecont.visible = false;
             this.showWaiting(400);
         });
@@ -190,11 +190,10 @@ class GameScene extends GameUtil.BassPanel {
             this.showWaiting(1000);
             return;
         } else {
-            (<GameUtil.MyTextField>this.betframecont.getChildByName('text3')).setText('' + 10);
-            (<GameUtil.MyTextField>this.betframecont.getChildByName('text2')).setText('' + (this.player[0].gold - 10));
+            let betnumber = Number((<GameUtil.MyTextField>this.betframecont.getChildByName('text3')).text);
+            (<GameUtil.MyTextField>this.betframecont.getChildByName('text2')).setText('' + (GameData._i().player[0].gold - betnumber));
             this.betframecont.visible = true;
         }
-
     }
     /**
      * 等待界面
@@ -202,7 +201,7 @@ class GameScene extends GameUtil.BassPanel {
     private showWaiting(delay: number) {
 
         this.addChild(GameUtil.WaitServerPanel.getInstace());
-        GameUtil.WaitServerPanel.getInstace().wainttext.size = 30;
+        GameUtil.WaitServerPanel.getInstace().wainttext.size = 50;
         GameUtil.WaitServerPanel.getInstace().wainttext.setText('请等待其他玩家下注');
         egret.setTimeout(() => {
             this.removeChild(GameUtil.WaitServerPanel.getInstace());
@@ -216,10 +215,10 @@ class GameScene extends GameUtil.BassPanel {
      */
     private AIbet() {
         for (let i: number = 0; i < 4; i++) {
-            if (this.player[i].isAI && !this.player[i].getBanker()) {
-                this.player[i].betgold = RandomUtils.limitInteger(1, 10) * 10;
-                this.player[i].gold -= this.player[i].betgold;
-                this.player[i].updatagold();
+            if (GameData._i().player[i].isAI && !GameData._i().player[i].getBanker()) {
+                GameData._i().player[i].betgold = RandomUtils.limitInteger(1, 20) * 10;
+                GameData._i().player[i].gold -= GameData._i().player[i].betgold;
+                GameData._i().player[i].updatagold();
             }
         }
     }
@@ -263,7 +262,7 @@ class GameScene extends GameUtil.BassPanel {
     public sendcard(bsendall: boolean) {
         //console.log('id===', id);
         this.sendcardbtn.visible = false;
-        if (bsendall && this.player[this.bankerID].handcardarr.length == 2) {
+        if (bsendall && GameData._i().player[this.bankerID].handcardarr.length == 2) {
             this.currPlayerID = (this.bankerID + 1) % 4;
             this.playercall();
             return;
@@ -280,28 +279,30 @@ class GameScene extends GameUtil.BassPanel {
         newcard.y = this.mStageH / 2;
         this.addChild(newcard);
         //放入玩家手中
-        this.player[id].handcardarr.push(newcard);
-        this.player[id].updatahandcardnumber();
+        GameData._i().player[id].handcardarr.push(newcard);
+        GameData._i().player[id].updatahandcardnumber();
 
         //牌的位置         
-        let posx = this.player[id].x;
-        let posy = this.player[id].y;
+        let posx = GameData._i().player[id].x;
+        let posy = GameData._i().player[id].y;
         let dis = 110;
-        if (this.player[id].rotation == 0) {
-            posx = this.player[id].x + 40 + dis * (this.player[id].handcardarr.length);
-        } else if (this.player[id].rotation == -90) {
-            posy = this.player[id].y - 40 - dis * (this.player[id].handcardarr.length);
-        } else if (this.player[id].rotation == -180) {
-            posx = this.player[id].x - 40 - dis * (this.player[id].handcardarr.length);
+        if (GameData._i().player[id].rotation == 0) {
+            posx = GameData._i().player[id].x + 40 + dis * (GameData._i().player[id].handcardarr.length);
+        } else if (GameData._i().player[id].rotation == -90) {
+            posy = GameData._i().player[id].y - 40 - dis * (GameData._i().player[id].handcardarr.length);
+        } else if (GameData._i().player[id].rotation == -180) {
+            posx = GameData._i().player[id].x - 40 - dis * (GameData._i().player[id].handcardarr.length);
         } else {
-            posy = this.player[id].y + 40 + dis * (this.player[id].handcardarr.length);
+            posy = GameData._i().player[id].y + 40 + dis * (GameData._i().player[id].handcardarr.length);
         }
 
-        egret.Tween.get(newcard).to({ x: posx, y: posy, rotation: this.player[id].rotation }, 500).call(() => {
-            newcard.showfront();
+        egret.Tween.get(newcard).to({ x: posx, y: posy, rotation: GameData._i().player[id].rotation }, 500).call(() => {
+            if (id == 0) {
+                newcard.showfront();
+            }
             this.bsendcard = false;
 
-            if (this.player[id].handcardarr.length >= 5) {
+            if (GameData._i().player[id].handcardarr.length >= 5) {
                 this.nextplayercall();
             } else {
                 if (!bsendall) {
@@ -335,11 +336,11 @@ class GameScene extends GameUtil.BassPanel {
      */
     private playercall() {
         if (this.currPlayerID == 0) {
-            this.player[this.currPlayerID].showcallbtn(true);
+            GameData._i().player[this.currPlayerID].showcallbtn(true);
         }
         else {
             //AI 叫牌
-            if (this.player[this.currPlayerID].getHandcardnumber() >= 17 || this.player[this.currPlayerID].getHandcardnumber() == 0) {
+            if (GameData._i().player[this.currPlayerID].getHandcardnumber() >= RandomUtils.limitInteger(17,21) || GameData._i().player[this.currPlayerID].getHandcardnumber() == 0) {
                 egret.setTimeout(this.nextplayercall, this, 500);
             } else {
                 egret.setTimeout(() => {
@@ -352,7 +353,7 @@ class GameScene extends GameUtil.BassPanel {
      * 下一个玩家叫牌
      */
     public nextplayercall() {
-        this.player[this.currPlayerID].showcallbtn(false);
+        GameData._i().player[this.currPlayerID].showcallbtn(false);
 
         if (this.currPlayerID == this.bankerID) {
             //清算
@@ -361,11 +362,11 @@ class GameScene extends GameUtil.BassPanel {
         } else {
             this.currPlayerID = (this.currPlayerID + 1) % 4;
             if (this.currPlayerID == 0) {
-                this.player[this.currPlayerID].showcallbtn(true);
+                GameData._i().player[this.currPlayerID].showcallbtn(true);
             }
             else {
                 //AI 叫牌
-                if (this.player[this.currPlayerID].getHandcardnumber() >= 17 || this.player[this.currPlayerID].getHandcardnumber() == 0) {
+                if (GameData._i().player[this.currPlayerID].getHandcardnumber() >= RandomUtils.limitInteger(17,21) || GameData._i().player[this.currPlayerID].getHandcardnumber() == 0) {
                     egret.setTimeout(this.nextplayercall, this, 500);
                 } else {
                     egret.setTimeout(() => {
@@ -379,10 +380,10 @@ class GameScene extends GameUtil.BassPanel {
     //清算
     private caculateGame() {
         //计算庄家手牌点数
-        let bankercardnumber = this.player[this.bankerID].getHandcardnumber();
-        let banker = this.player[this.bankerID];
+        let bankercardnumber = GameData._i().player[this.bankerID].getHandcardnumber();
+        let banker = GameData._i().player[this.bankerID];
         for (let i: number = 0; i < 4; i++) {
-            let player = this.player[i];
+            let player = GameData._i().player[i];
             if (!player.getBanker()) {
                 let playercardnumber = player.getHandcardnumber();
                 if (playercardnumber > bankercardnumber) {          //玩家赢
@@ -390,23 +391,46 @@ class GameScene extends GameUtil.BassPanel {
                     banker.gold -= betnumber;
                     banker.updatagold();
                     player.gold += (betnumber * 2);
-                    player.betgold = 0;
+                    //player.betgold = 0;
                     player.updatagold();
+                    player.isWin = JUDEWIN.WIN;
+                    GameData._i().bankerwinCount -= betnumber;
                 } else if (playercardnumber == bankercardnumber) {  //玩家平
                     player.gold += player.betgold;
-                    player.betgold = 0;
+                    //player.betgold = 0;
                     player.updatagold();
+                    player.isWin = JUDEWIN.DRAW;
                 } else {        //玩家输
                     let betnumber = player.betgold;
                     banker.gold += betnumber;
                     banker.updatagold();
-                    player.betgold = 0;
+                    //player.betgold = 0;
                     player.updatagold();
+                    player.isWin = JUDEWIN.LOST;
+                    GameData._i().bankerwinCount += betnumber;
                 }
             }
         }
+        if (GameData._i().bankerwinCount < 0) {
+            GameData._i().player[this.bankerID].isWin = JUDEWIN.LOST;
+        } else if (GameData._i().bankerwinCount == 0) {
+            GameData._i().player[this.bankerID].isWin = JUDEWIN.DRAW;
+        } else {
+            GameData._i().player[this.bankerID].isWin = JUDEWIN.WIN;
+        }
         // this.restart();
-        this.gameover();
+       // this.gameover();
+        this.showallcard(); 
+    }
+
+    private showallcard() {
+        for (let i: number = 1; i < 4; i++){
+            for (let j: number = 0; j < GameData._i().player[i].handcardarr.length; j++) {
+                let card = GameData._i().player[i].handcardarr[j];
+                card.showfront();
+            }
+        }
+        egret.setTimeout(this.gameover, this, 2500);
     }
 
     /**
@@ -486,15 +510,15 @@ class GameScene extends GameUtil.BassPanel {
     public gameover() {
         console.log("GameOver");
         for (let i: number = 0; i < 4; i++) {
-            for (let j: number = 0; j < this.player[i].handcardarr.length; j++) {
-                let card = this.player[i].handcardarr[j];
+            for (let j: number = 0; j < GameData._i().player[i].handcardarr.length; j++) {
+                let card = GameData._i().player[i].handcardarr[j];
                 egret.Tween.get(card).to({ x: this.mStageW / 2, y: this.mStageH / 2 }, 300).call(() => {
                     this.removeChild(card);
                 }, this);
             }
 
-            this.player[i].handcardarr = [];
-            this.player[i].setBanker(false);
+            GameData._i().player[i].handcardarr = [];
+            GameData._i().player[i].setBanker(false);
 
         }
 
@@ -532,8 +556,17 @@ class GameScene extends GameUtil.BassPanel {
      */
     private restart() {
 
+        GameData._i().bankerwinCount = 0;        
+        for (let i: number = 0; i < 54; i++) {
+            this.cardarr[i] = i + 1;
+        }
+        for (let i: number = 0; i < 4; i++){
+            GameData._i().player[i].betgold = 0;
+            GameData._i().player[i].updatagold();
+        } 
         this.bankerID = RandomUtils.limitInteger(0, 3);
-        this.player[this.bankerID].setBanker(true);
+        GameData._i().bankerID = this.bankerID;
+        GameData._i().player[this.bankerID].setBanker(true);
         this.currPlayerID = (this.bankerID + 1) % 4;
 
         this.downtime = 3;

@@ -9,9 +9,9 @@
 	],
 	"game": [
 		"bin-debug/GameUtils3/BassPanel.js",
-		"bin-debug/Othercontainer.js",
 		"bin-debug/GameUtils3/MyBitmap.js",
 		"bin-debug/GameUtils3/MyTextField.js",
+		"bin-debug/Othercontainer.js",
 		"bin-debug/GameUtils3/InputTextFiled.js",
 		"bin-debug/GameOverPageShow.js",
 		"bin-debug/GameRankPageShow.js",

@@ -8,6 +8,7 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 var GameData = (function () {
     function GameData() {
         this.gamesound = []; //游戏声音
+        this.player = [];
         this.init();
     }
     GameData.prototype.init = function () {
@@ -17,6 +18,8 @@ var GameData = (function () {
         this.GameScore = 0;
         this.GameLevel = 1;
         this.HeightScore = 0;
+        this.bankerwinCount = 0;
+        this.bankerID = 0;
     };
     GameData._i = function () {
         return (this._inst = (this._inst == null ? new GameData() : this._inst));

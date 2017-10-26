@@ -9,9 +9,9 @@
 	],
 	"game": [
 		"bin-debug/GameUtils3/BassPanel.js",
-		"bin-debug/GameUtils3/MyBitmap.js",
 		"bin-debug/GameUtils3/MyTextField.js",
 		"bin-debug/Othercontainer.js",
+		"bin-debug/GameUtils3/MyBitmap.js",
 		"bin-debug/GameUtils3/InputTextFiled.js",
 		"bin-debug/GameOverPageShow.js",
 		"bin-debug/GameRankPageShow.js",
@@ -34,7 +34,7 @@
 		"bin-debug/GameUtils3/GetResByany.js",
 		"bin-debug/GameUtils3/GuideLayer.js",
 		"bin-debug/GameUtils3/Http.js",
-		"bin-debug/CardSprite.js",
+		"bin-debug/qr/QRUtil.js",
 		"bin-debug/GameUtils3/LoadingLogopre.js",
 		"bin-debug/GameUtils3/LoadingPanel.js",
 		"bin-debug/GameUtils3/Menu.js",
@@ -59,6 +59,6 @@
 		"bin-debug/qr/QRMode.js",
 		"bin-debug/qr/QRPolynomial.js",
 		"bin-debug/qr/QRRSBlock.js",
-		"bin-debug/qr/QRUtil.js"
+		"bin-debug/CardSprite.js"
 	]
 }

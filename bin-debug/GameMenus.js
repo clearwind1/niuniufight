@@ -55,7 +55,7 @@ var GameMenus = (function (_super) {
             btn.x = posx;
             btn.y = 80 + posy + (i - 2) * 100;
         }
-        GameUtil.doAction(this, DisType.TopTDown);
+        GameUtil.doAction(this, this.showtype);
     };
     GameMenus.prototype.startgame = function () {
         GameUtil.GameScene.runscene(new GameScene());
@@ -65,7 +65,7 @@ var GameMenus = (function (_super) {
         var posx = this.mStageW / 2;
         var posy = this.mStageH / 2;
         var text = new GameUtil.MyTextField(50, 50, 30, 0, 0.5);
-        text.setText('玩法介绍:');
+        text.setText('\n玩法介绍:\n每个玩家起手两张牌，可以随意补牌（最多补到五张）\n手牌加起来最大是21点，超过则爆掉为0点');
         text.textColor = 0xcbeaa0;
         text.width = this.mStageW - 100;
         this.maskscene.addChild(text);
@@ -75,7 +75,7 @@ var GameMenus = (function (_super) {
         var posx = this.mStageW / 2;
         var posy = this.mStageH / 2;
         var text = new GameUtil.MyTextField(50, 50, 30, 0, 0.5);
-        text.setText('游戏设置:');
+        text.setText('\n游戏设置:\n');
         text.textColor = 0xcbeaa0;
         text.width = this.mStageW - 100;
         this.maskscene.addChild(text);
